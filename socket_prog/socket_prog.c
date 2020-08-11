@@ -6,5 +6,5 @@
 
 int main()
 {
-  printf("Hello World!\n");
+  printf("test c!\n");
 }
