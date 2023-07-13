@@ -1,2 +1,3 @@
-Codding with native language
- 
+# C  
+
+The collection of small programs written in C.
