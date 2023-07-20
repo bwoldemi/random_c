@@ -10,7 +10,9 @@ typedef struct list_node
     struct list_node *next; // Pointer to the next  in the list
 } list_node;
 
-static int insert_data(list_node **t_storage, uint32_t id, int data)
+static list_node *t_storage = NULL;
+
+static int insert_data( uint32_t id, int data)
 {
 
     list_node *new_data;
@@ -25,14 +27,14 @@ static int insert_data(list_node **t_storage, uint32_t id, int data)
     new_data->id = id;
     new_data->next = NULL;
 
-    if (*t_storage == NULL)
+    if (t_storage == NULL)
     {
-        *t_storage = new_data;
+        t_storage = new_data;
 
         return -1;
     }
 
-    list_node *current = *t_storage;
+    list_node *current = t_storage;
 
     while (current->next != NULL)
     {
@@ -44,9 +46,9 @@ static int insert_data(list_node **t_storage, uint32_t id, int data)
     return 0;
 }
 
-list_node *find_node(list_node **t_storage, int id)
+list_node *find_node(int id)
 {
-    list_node *temp = *t_storage;
+    list_node *temp = t_storage;
 
     while (temp != NULL)
     {
@@ -60,10 +62,10 @@ list_node *find_node(list_node **t_storage, int id)
     return NULL;
 }
 
-static int del_node(list_node **t_storage, int id)
+static int del_node(int id)
 {
     list_node *prev = NULL;
-    list_node *current = *t_storage;
+    list_node *current = t_storage;
 
     while (current != NULL)
     {
@@ -71,7 +73,7 @@ static int del_node(list_node **t_storage, int id)
         {
             if (prev == NULL)
             {
-                *t_storage = current->next;
+                t_storage = current->next;
             }
             else
             {
@@ -89,9 +91,9 @@ static int del_node(list_node **t_storage, int id)
     return -1;
 }
 
-int free_storage(list_node **t_storage)
+int free_storage()
 {
-    list_node *temp = *t_storage;
+    list_node *temp = t_storage;
 
     while (temp != NULL)
     {
@@ -99,19 +101,19 @@ int free_storage(list_node **t_storage)
         temp = temp->next;
         free(t);
     }
-    *t_storage = NULL;
+    t_storage = NULL;
 
     return 0;
 }
 
-static void print_all_data(list_node **t_storage)
+static void print_all_data()
 {
-    if (*t_storage == NULL)
+    if (t_storage == NULL)
     {
         printf("storage is Empty \n");
     }
 
-    list_node *t = *t_storage;
+    list_node *t = t_storage;
     while (t != NULL)
     {
         printf("id: %d data:%d\n", t->id, t->data);
@@ -121,25 +123,25 @@ static void print_all_data(list_node **t_storage)
 
 int main()
 {
-    list_node *t_storage = NULL;
+    
 
-    insert_data(&t_storage, 1,1);
-    insert_data(&t_storage, 2,2);
-    insert_data(&t_storage, 3,3);
-    insert_data(&t_storage, 4,4);
+    insert_data( 1,1);
+    insert_data( 2,2);
+    insert_data( 3,3);
+    insert_data( 4,4);
 
-    print_all_data(&t_storage);
+    print_all_data();
 
-    del_node(&t_storage, 3);
+    del_node(3);
     printf("After deleting node 3\n");
     print_all_data(&t_storage);
 
 
-    del_node(&t_storage, 2);
+    del_node(2);
     printf("After deleting node 2\n");
-    print_all_data(&t_storage);
+    print_all_data();
 
-    free_storage(&t_storage);
+    free_storage();
 
     return 0;
 }
