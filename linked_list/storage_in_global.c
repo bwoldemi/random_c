@@ -1,23 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 // Structure to represent a
 typedef struct list_node
 {
     uint32_t id;
-    int data;               // Data associated with the
+    int data;   
+    char *msg;
+    int     msg_len;        // Data associated with the
     struct list_node *next; // Pointer to the next  in the list
 } list_node;
 
 static list_node *t_storage = NULL;
 
-static int insert_data( uint32_t id, int data)
+static int insert_data( uint32_t id, int data, char *msg , int msg_len)
 {
 
     list_node *new_data;
     new_data = (list_node *)malloc(sizeof(list_node));
-
+    memset(new_data, 0, sizeof(list_node));
     if (new_data == NULL)
     {
         printf("Data is not allowed\n");
@@ -26,7 +29,8 @@ static int insert_data( uint32_t id, int data)
     new_data->data = data;
     new_data->id = id;
     new_data->next = NULL;
-
+    new_data->msg = (char *)malloc(msg_len*sizeof(char));
+    strncpy(new_data->msg, msg, msg_len);
     if (t_storage == NULL)
     {
         t_storage = new_data;
@@ -79,7 +83,7 @@ static int del_node(int id)
             {
                 prev->next = current->next;
             }
-
+            free(current->msg);
             free(current);
             return 0;
         }
@@ -99,6 +103,7 @@ int free_storage()
     {
         list_node *t = temp;
         temp = temp->next;
+        free(t->msg);
         free(t);
     }
     t_storage = NULL;
@@ -116,7 +121,7 @@ static void print_all_data()
     list_node *t = t_storage;
     while (t != NULL)
     {
-        printf("id: %d data:%d\n", t->id, t->data);
+        printf("id: %d data:%d msg %s\n", t->id, t->data, t->msg);
         t = t->next;
     }
 }
@@ -124,22 +129,24 @@ static void print_all_data()
 int main()
 {
     
-
-    insert_data( 1,1);
-    insert_data( 2,2);
-    insert_data( 3,3);
-    insert_data( 4,4);
-
+    char msg1[]= "test1";
+    char msg2[]= "test2";
+    char msg3[]= "test3";
+    insert_data( 1,1, msg1, strlen(msg1)+1);
+    insert_data( 2,2, msg2, strlen(msg1)+1);
+    insert_data( 3,3, msg3, strlen(msg1)+1);
+    
     print_all_data();
 
-    del_node(3);
+   // del_node(1);
     printf("After deleting node 3\n");
     print_all_data(&t_storage);
 
 
-    del_node(2);
+   // del_node(2);
     printf("After deleting node 2\n");
     print_all_data();
+   // del_node(3);
 
     free_storage();
 

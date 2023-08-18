@@ -128,6 +128,7 @@ int main()
     insert_data(&t_storage, 3,3);
     insert_data(&t_storage, 4,4);
 
+
     print_all_data(&t_storage);
 
     del_node(&t_storage, 3);
